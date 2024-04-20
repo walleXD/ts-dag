@@ -1,6 +1,6 @@
 {
   "name": "@ts-dag/builder",
-  "version": "0.1.0@alpha-1",
+  "version": "0.1.0-alpha.1",
   "description": "Build and execute a directed acyclic graph of tasks",
   "main": "dist/main.js",
   "files": [
