@@ -1,0 +1,24 @@
+{
+  "name": "@ts-dag/builder",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "pnpm run build & pnpm run test:only",
+    "dev": "pnpm run build:fast --watch",
+    "build": "tsup src/main.ts --clean --splitting",
+    "test:only": "vitest run",
+    "build:fast": "pnpm run build --no-dts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.0"
+  },
+  "dependencies": {
+    "nanoid": "3"
+  }
+}
