@@ -1,8 +1,16 @@
 {
   "name": "@ts-dag/builder",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.1.0@alpha-1",
+  "description": "Build and execute a directed acyclic graph of tasks",
   "main": "dist/main.js",
+  "files": [
+    "/dist"
+  ],
+  "homepage": "https://github.com/walleXD/ts-dag/tree/main/pkgs/builder",
+  "repository": {
+    "url": "https://github.com/walleXD/ts-dag.git"
+  },
+  "author": "walleXD",
   "scripts": {
     "test": "pnpm run build & pnpm run test:only",
     "dev": "pnpm run build:fast --watch",
@@ -11,7 +19,6 @@
     "build:fast": "pnpm run build --no-dts"
   },
   "keywords": [],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "tsup": "^8.0.2",
