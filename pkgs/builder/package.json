@@ -8,7 +8,7 @@
   ],
   "homepage": "https://github.com/walleXD/ts-dag/tree/main/pkgs/builder",
   "repository": {
-    "url": "https://github.com/walleXD/ts-dag.git"
+    "url": "git+https://github.com/walleXD/ts-dag.git"
   },
   "author": "walleXD",
   "scripts": {
