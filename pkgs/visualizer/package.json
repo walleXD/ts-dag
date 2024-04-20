@@ -1,0 +1,38 @@
+{
+  "name": "@ts-dag/visualizer",
+  "version": "0.1.0-alpha.1",
+  "private": false,
+  "description": "build visual representation of directed acyclic graph of tasks",
+  "main": "dist/main.js",
+  "files": [
+    "/dist"
+  ],
+  "homepage": "https://github.com/wallexd/ts-dag/tree/main/pkgs/visualizer",
+  "repository": {
+    "url": "git+https://github.com/wallexd/ts-dag.git"
+  },
+  "author": "wallexd",
+  "scripts": {
+    "test": "pnpm run build & pnpm run test:only",
+    "dev": "pnpm run build:fast --watch",
+    "build": "tsup src/main.ts --clean --splitting",
+    "test:only": "vitest run",
+    "build:fast": "pnpm run build --no-dts"
+  },
+  "keywords": [],
+  "license": "mit",
+  "peerDependencies": {
+    "@ts-dag/builder": "0.1.0-alpha.1"
+  },
+  "dependencies": {
+    "@ts-graphviz/adapter": "^2.0.2",
+    "ts-graphviz": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "20",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.0",
+    "@ts-dag/builder": "workspace:*"
+  }
+}

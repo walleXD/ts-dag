@@ -8,7 +8,7 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2
 
-  pkgs/ts-dag:
+  pkgs/builder:
     dependencies:
       nanoid:
         specifier: '3'
@@ -22,7 +22,32 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.5.0
-        version: 1.5.0
+        version: 1.5.0(@types/node@20.12.7)
+
+  pkgs/visualizer:
+    dependencies:
+      '@ts-graphviz/adapter':
+        specifier: ^2.0.2
+        version: 2.0.2
+      ts-graphviz:
+        specifier: ^2.1.1
+        version: 2.1.1
+    devDependencies:
+      '@ts-dag/builder':
+        specifier: workspace:*
+        version: link:../builder
+      '@types/node':
+        specifier: '20'
+        version: 20.12.7
+      tsup:
+        specifier: ^8.0.2
+        version: 8.0.2(typescript@5.4.5)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      vitest:
+        specifier: ^1.5.0
+        version: 1.5.0(@types/node@20.12.7)
 
 packages:
 
@@ -649,8 +674,41 @@ packages:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
 
+  /@ts-graphviz/adapter@2.0.2:
+    resolution: {integrity: sha512-zSGszRZAK2ATObOd7MeF3qvF91HMRxGQaQuuyTYexkDt5p9nkXbt/4CBByoF4elF+/ol2Ge1oUEs+uPtD8X9aA==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@ts-graphviz/common': 2.1.1
+    dev: false
+
+  /@ts-graphviz/ast@2.0.2:
+    resolution: {integrity: sha512-uj28EqpISyDTSSdMUo0Jt4K2mAQ90eqsV3vk4TA44l8ttttC9sLFqBo6Bz2ileraNohQrC3s8HgfH2cpUPQ5SA==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@ts-graphviz/common': 2.1.1
+    dev: false
+
+  /@ts-graphviz/common@2.1.1:
+    resolution: {integrity: sha512-YGfDhLwkZk1rc9o0YoTxFEtidAZt43Yh4OBW0tRSrZxGqB9do7OqGHA/Kf5iQ7St1scTkZLEv4YRygjgFbxqmw==}
+    engines: {node: '>=18'}
+    dev: false
+
+  /@ts-graphviz/core@2.0.2:
+    resolution: {integrity: sha512-dHr9IoliSoAQuOKPAgvixp2CbEh1bvRD59D+ME5r6HOUU8KyxJCgpuk4YGtinDDKNFfwuCjzjLBJgQBGOjZWIA==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@ts-graphviz/ast': 2.0.2
+      '@ts-graphviz/common': 2.1.1
+    dev: false
+
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+    dev: true
+
+  /@types/node@20.12.7:
+    resolution: {integrity: sha512-wq0cICSkRLVaf3UGLMGItu/PtdY7oaXaI/RVU+xliKVOtRna3PRY57ZDfztpDL0n11vfymMUnXv8QwYCO7L1wg==}
+    dependencies:
+      undici-types: 5.26.5
     dev: true
 
   /@vitest/expect@1.5.0:
@@ -1612,6 +1670,16 @@ packages:
     hasBin: true
     dev: true
 
+  /ts-graphviz@2.1.1:
+    resolution: {integrity: sha512-iaZNFrTtGLV84Y/a2+22iuIT91eu5qVng07XwAm596+Km2zP3XcmZhZXBS6KDzQdrv0qIanV8GR3LWUzVijwZg==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@ts-graphviz/adapter': 2.0.2
+      '@ts-graphviz/ast': 2.0.2
+      '@ts-graphviz/common': 2.1.1
+      '@ts-graphviz/core': 2.0.2
+    dev: false
+
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
@@ -1730,7 +1798,11 @@ packages:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
     dev: true
 
-  /vite-node@1.5.0:
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    dev: true
+
+  /vite-node@1.5.0(@types/node@20.12.7):
     resolution: {integrity: sha512-tV8h6gMj6vPzVCa7l+VGq9lwoJjW8Y79vst8QZZGiuRAfijU+EEWuc0kFpmndQrWhMMhet1jdSF+40KSZUqIIw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -1739,7 +1811,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.9
+      vite: 5.2.9(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -1751,7 +1823,7 @@ packages:
       - terser
     dev: true
 
-  /vite@5.2.9:
+  /vite@5.2.9(@types/node@20.12.7):
     resolution: {integrity: sha512-uOQWfuZBlc6Y3W/DTuQ1Sr+oIXWvqljLvS881SVmAj00d5RdgShLcuXWxseWPd4HXwiYBFW/vXHfKFeqj9uQnw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -1779,6 +1851,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 20.12.7
       esbuild: 0.20.2
       postcss: 8.4.38
       rollup: 4.14.3
@@ -1786,7 +1859,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@1.5.0:
+  /vitest@1.5.0(@types/node@20.12.7):
     resolution: {integrity: sha512-d8UKgR0m2kjdxDWX6911uwxout6GHS0XaGH1cksSIVVG8kRlE7G7aBw7myKQCvDI5dT4j7ZMa+l706BIORMDLw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -1811,6 +1884,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
+      '@types/node': 20.12.7
       '@vitest/expect': 1.5.0
       '@vitest/runner': 1.5.0
       '@vitest/snapshot': 1.5.0
@@ -1828,8 +1902,8 @@ packages:
       strip-literal: 2.1.0
       tinybench: 2.7.0
       tinypool: 0.8.4
-      vite: 5.2.9
-      vite-node: 1.5.0
+      vite: 5.2.9(@types/node@20.12.7)
+      vite-node: 1.5.0(@types/node@20.12.7)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
