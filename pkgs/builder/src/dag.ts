@@ -1,21 +1,55 @@
 import { nanoid } from "nanoid";
 
+/**
+ * A function that performs a task within a given context.
+ * @template T - The type of the context.
+ * @template U - The type of the return value.
+ * @param {T} ctx - The context in which the task is performed.
+ * @returns {U | Promise<U>} - The result of the task.
+ */
 export type TaskFunction<T extends Context, U extends unknown = unknown> = (
   ctx: T,
 ) => U | Promise<U>;
+
+/**
+ * A callback function that modifies a given context.
+ * @template T - The type of the context.
+ * @param {T} ctx - The context to be modified.
+ * @returns {Partial<T> | void} - The modified context or nothing.
+ */
 export type ContextCallback<T extends Context = Context> = (
   ctx: T,
 ) => Partial<T> | void;
+
+/**
+ * An asynchronous callback function that modifies a given context.
+ * @template T - The type of the context.
+ * @param {T} ctx - The context to be modified.
+ * @returns {Promise<Partial<T> | void>} - A promise that resolves with the modified context or nothing.
+ */
 export type AsyncContextCallback<T extends Context = Context> = (
   ctx: T,
 ) => Promise<Partial<T> | void>;
 
+/**
+ * An interface representing a context.
+ * A context is an object that can have any number of properties of any type.
+ */
 export interface Context {
   [key: string]: any;
 }
 
+/**
+ * A record of tasks with their names as keys and the tasks themselves as values.
+ * @template T - The type of the context in which the tasks are performed.
+ */
 export type Tasks<T extends Context> = Record<string, Task<T>>;
 
+/**
+ * A class representing a task.
+ * @template T - The type of the context in which the task is performed.
+ * @template U - The type of the return value of the task.
+ */
 export class Task<T extends Context, U extends unknown = unknown> {
   private _output: U | undefined;
   public id = nanoid();
@@ -44,6 +78,10 @@ export class Task<T extends Context, U extends unknown = unknown> {
   }
 }
 
+/**
+ * A class representing a directed acyclic graph (DAG) of tasks.
+ * @template T - The type of the context in which the tasks are performed.
+ */
 export class Dag<T extends Context = Context> {
   private _tasks: Tasks<T> = {};
   private ctx: T = {} as T;
