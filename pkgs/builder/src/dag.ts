@@ -65,6 +65,16 @@ export class Task<T extends Context, U extends unknown = unknown> {
     }
   }
 
+  /**
+   * Runs the task with the provided context.
+   *
+   * @template T - The type of the context that the task requires.
+   * @template U - The type of the output that the task produces.
+   *
+   * @param ctx - The context to run the task with.
+   *
+   * @returns A promise that resolves with the output of the task.
+   */
   public async run(ctx: T): Promise<U> {
     const output = await (this.retryCount > 0
       ? pRetry(() => this.callback(ctx), { retries: this.retryCount })
@@ -89,6 +99,16 @@ export class Task<T extends Context, U extends unknown = unknown> {
   }
 }
 
+/**
+ * Represents an error that occurred while working with a TypeScript Directed Acyclic Graph (DAG).
+ *
+ * @template T - The type of the context that the DAG uses.
+ *
+ * @property name - The name of the error.
+ * @property message - A message describing the error.
+ * @property [cause] - The underlying cause of the error, if any.
+ * @property [task] - The task that was being run when the error occurred, if any.
+ */
 export class TsDagError<T extends Context = Context> extends Error {
   constructor(
     public name: string,
@@ -102,6 +122,19 @@ export class TsDagError<T extends Context = Context> extends Error {
 
 export type DagErrorName =
   (typeof DagError.errors)[keyof typeof DagError.errors];
+
+/**
+ * Represents a specific type of error that can occur while working with a Directed Acyclic Graph (DAG).
+ *
+ * This class extends TsDagError and adds specific error names for different types of DAG errors.
+ *
+ * @template T - The type of the context that the DAG uses.
+ *
+ * @property name - The name of the error. This is one of the keys of the `errors` object.
+ * @property message - A message describing the error.
+ * @property [cause] - The underlying cause of the error, if any.
+ * @property [task] - The task that was being run when the error occurred, if any.
+ */
 export class DagError<T extends Context = Context> extends TsDagError<T> {
   static readonly errors = {
     dependentTaskExecutionError: "DependentTaskExecutionError",
@@ -121,6 +154,19 @@ export class DagError<T extends Context = Context> extends TsDagError<T> {
 
 export type TaskErrorName =
   (typeof TaskError.errors)[keyof typeof TaskError.errors];
+
+/**
+ * Represents a specific type of error that can occur while working with a Task in a Directed Acyclic Graph (DAG).
+ *
+ * This class extends TsDagError and adds a specific error name for task errors.
+ *
+ * @template T - The type of the context that the DAG uses.
+ *
+ * @property name - The name of the error. This is one of the keys of the `errors` object.
+ * @property message - A message describing the error.
+ * @property [cause] - The underlying cause of the error, if any.
+ * @property [task] - The task that was being run when the error occurred, if any.
+ */
 export class TaskError<T extends Context = Context> extends TsDagError<T> {
   static readonly errors = {
     prematureOutputAccessError: "PrematureOutputAccessError",
@@ -135,6 +181,19 @@ export class TaskError<T extends Context = Context> extends TsDagError<T> {
     super(name, message, cause, task);
   }
 }
+
+/**
+ * Represents an unknown error that occurred while working with a Directed Acyclic Graph (DAG).
+ *
+ * This class extends TsDagError and is used for errors that do not fall into any of the other specific error categories.
+ *
+ * @template T - The type of the context that the DAG uses.
+ *
+ * @property name - The name of the error. This is always "UnknownDagError".
+ * @property message - A message describing the error.
+ * @property cause - The underlying cause of the error.
+ * @property [task] - The task that was being run when the error occurred, if any.
+ */
 export class UnknownDagError<
   T extends Context = Context,
 > extends TsDagError<T> {
@@ -159,6 +218,14 @@ export class Dag<T extends Context = Context> {
     return this._tasks;
   }
 
+  /**
+   * Performs a topological sort on the tasks in the DAG.
+   *
+   * This method is used to determine an order for the tasks that respects their dependencies.
+   * In the resulting order, each task comes before all tasks that depend on it.
+   *
+   * @returns An array of tasks in topologically sorted order.
+   */
   private topologicalSort(): Task<T>[] {
     const visited = new Set<Task<T>>();
     const sorted: Task<T>[] = [];
@@ -176,6 +243,15 @@ export class Dag<T extends Context = Context> {
     return sorted;
   }
 
+  /**
+   * Loads the context for the DAG.
+   *
+   * This method is responsible for loading the context that will be used when running the tasks in the DAG.
+   * The context can either be an object or a callback function that produces the context.
+   * If the context is a callback function, it can be either synchronous or asynchronous.
+   *
+   * @returns A promise that resolves when the context has been loaded.
+   */
   private async loadContext(): Promise<void> {
     const ctxOrCallback = this._ctxOrCallback;
     if (typeof ctxOrCallback === "object") {
@@ -198,6 +274,17 @@ export class Dag<T extends Context = Context> {
     }
   }
 
+  /**
+   * Runs all the tasks in the DAG.
+   *
+   * This method first loads the context for the DAG, then performs a topological sort on the tasks to determine the order in which they should be run.
+   * Each task is run after all its dependencies have completed.
+   *
+   * @returns A promise that resolves when all tasks have completed. If any task fails, the promise is rejected with the error that caused the failure.
+   *
+   * @throws If an unknown error occurs while running a task, an `UnknownDagError` is thrown.
+   * @throws If a task fails due to a dependency failure, a `DagError` is thrown.
+   */
   public async run(): Promise<void> {
     await this.loadContext();
     // Run tasks
@@ -257,6 +344,20 @@ export class Dag<T extends Context = Context> {
     }
   }
 
+  /**
+   * Sets the context for the DAG.
+   *
+   * The context can be a partial context object, a synchronous context callback, or an asynchronous context callback.
+   * The context is used when running the tasks in the DAG.
+   *
+   * Note: The context can only be set once per DAG instance. If you try to set the context more than once, a DagError will be thrown.
+   *
+   * @param ctxOrCallback - The context or context callback to set.
+   *
+   * @returns The current DAG instance, allowing for method chaining.
+   *
+   * @throws If the context has already been set for this DAG instance.
+   */
   context(
     ctxOrCallback: Partial<T> | ContextCallback<T> | AsyncContextCallback<T>,
   ): this {
@@ -272,6 +373,18 @@ export class Dag<T extends Context = Context> {
     return this;
   }
 
+  /**
+   * Creates a new task and adds it to the DAG.
+   *
+   * @template U - The type of the output that the task produces.
+   *
+   * @param name - The name of the task.
+   * @param callback - The callback function to run when the task is executed. This function takes the DAG's context as an argument and produces the task's output.
+   * @param [dependencies=[]] - An array of tasks that this task depends on. This task will not be run until all its dependencies have completed.
+   * @param [retryCount] - The number of times to retry the task if it fails. If not provided, the task will not be retried.
+   *
+   * @returns The created task.
+   */
   task<U extends unknown = unknown>(
     name: string,
     callback: (ctx: T) => U | Promise<U>,
@@ -345,14 +458,12 @@ if (import.meta.vitest) {
     });
 
     describe("error handling", () => {
-      // test for all DAG error handling
       it("should throw an error if context is set multiple times", () => {
         expect(() =>
           new Dag().context({ foo: "bar" }).context({ foo: "bar" }),
         ).toThrowError(DagError);
       });
 
-      // test for all DAG error handling
       it("should throw an error if task output is accessed without dependency", () => {
         const dag = new Dag<{ hello: string }>();
 
