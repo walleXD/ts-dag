@@ -71,10 +71,67 @@ export class Task<T extends Context, U extends unknown = unknown> {
       console.error(
         `Task ${this.name} output accessed before ${this.name} ran`,
       );
-      throw new Error("Output was accessed before task was run");
+      throw new TaskError(
+        TaskError.errors.prematureOutputAccessError,
+        "Output was accessed before task was run",
+      );
     }
 
     return this._output;
+  }
+}
+
+export class TsDagError<T extends Context = Context> extends Error {
+  constructor(
+    public name: string,
+    public message: string,
+    public cause?: any,
+    public task?: Task<T>,
+  ) {
+    super(message, { cause: cause });
+  }
+}
+
+export type DagErrorName =
+  (typeof DagError.errors)[keyof typeof DagError.errors];
+export class DagError<T extends Context = Context> extends TsDagError<T> {
+  static readonly errors = {
+    dependentTaskExecutionError: "DependentTaskExecutionError",
+    executionError: "ExecutionError",
+    multipleContextAssignmentError: "MultipleContextAssignmentError",
+  } as const;
+
+  constructor(
+    public name: DagErrorName,
+    public message: string,
+    public cause?: any,
+    public task?: Task<T>,
+  ) {
+    super(name, message, cause, task);
+  }
+}
+
+export type TaskErrorName =
+  (typeof TaskError.errors)[keyof typeof TaskError.errors];
+export class TaskError<T extends Context = Context> extends TsDagError<T> {
+  static readonly errors = {
+    prematureOutputAccessError: "PrematureOutputAccessError",
+  } as const;
+
+  constructor(
+    public name: TaskErrorName,
+    public message: string,
+    public cause?: any,
+    public task?: Task<T>,
+  ) {
+    super(name, message, cause, task);
+  }
+}
+export class UnknownDagError<
+  T extends Context = Context,
+> extends TsDagError<T> {
+  constructor(message: string, cause: any, task?: Task<T>) {
+    super("UnknownDagError", message, cause, task);
   }
 }
 
@@ -148,7 +205,26 @@ export class Dag<T extends Context = Context> {
       const taskPromise = (async () => {
         // Wait for the dependencies to complete
         const taskDeps = task.dependencies.map((dep) => taskPromises.get(dep));
-        await Promise.all(taskDeps);
+
+        try {
+          // TODO: handle dependency errors
+          await Promise.all(taskDeps);
+        } catch (error) {
+          if (error instanceof Error) {
+            throw new DagError(
+              DagError.errors.dependentTaskExecutionError,
+              `Task ${task.name} failed to run due to dependency failure`,
+              error.stack,
+              task,
+            );
+          }
+
+          throw new UnknownDagError(
+            "Unknown error while running a task",
+            error,
+            task,
+          );
+        }
 
         const output = await task.run(this.ctx);
         return output;
@@ -158,16 +234,31 @@ export class Dag<T extends Context = Context> {
       taskPromises.set(task, taskPromise);
     }
 
-    // Wait for all tasks to complete
-    await Promise.all(taskPromises.values());
+    try {
+      // Wait for all tasks to complete
+      await Promise.allSettled(taskPromises.values());
+    } catch (error) {
+      if (error instanceof UnknownDagError || error instanceof DagError) {
+        console.error(error.name, error.message, error);
+        throw error;
+      } else {
+        console.error("Unforseen Error in dag run", error);
+      }
+
+      throw error;
+    }
   }
 
   context(
     ctxOrCallback: Partial<T> | ContextCallback<T> | AsyncContextCallback<T>,
   ): this {
     if (this._ctxOrCallback) {
-      throw new Error("Context can only be set once per Dag instance");
+      throw new DagError(
+        DagError.errors.multipleContextAssignmentError,
+        "Context can only be set once per DAG instance",
+      );
     }
+
     this._ctxOrCallback = ctxOrCallback;
 
     return this;
@@ -219,6 +310,52 @@ if (import.meta.vitest) {
         const task2 = dag.task("task2", async () => {}, [task1]);
 
         expect(task2.dependencies).toEqual([task1]);
+      });
+    });
+
+    describe("error handling", () => {
+      // test for all DAG error handling
+      it("should throw an error if context is set multiple times", () => {
+        expect(() =>
+          new Dag().context({ foo: "bar" }).context({ foo: "bar" }),
+        ).toThrowError(DagError);
+      });
+
+      // test for all DAG error handling
+      it("should throw an error if task output is accessed without dependency", () => {
+        const dag = new Dag<{ hello: string }>();
+
+        const task1 = dag.task("task1", () => {
+          return 1;
+        });
+
+        const task2 = dag.task("task2", async () => {
+          console.log(task1.output);
+          return task1.output + 1;
+        });
+
+        expect(() => task1.output).toThrowError(TaskError);
+      });
+
+      it("tasks error", async () => {
+        const dag = new Dag<{ hello: string }>();
+        const task1 = dag.task("task1", () => {
+          return 1;
+        });
+
+        const task2 = dag.task(
+          "task2",
+          async () => {
+            throw new Error("Task 2 failed");
+          },
+          [task1],
+        );
+
+        try {
+          await dag.run();
+        } catch (error) {
+          expect(error).toBeInstanceOf(DagError);
+        }
       });
     });
 
