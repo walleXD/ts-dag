@@ -15,7 +15,7 @@
   "scripts": {
     "test": "pnpm run build & pnpm run test:only",
     "dev": "pnpm run build:fast --watch",
-    "build": "tsup src/main.ts --clean --splitting",
+    "build": "tsup-node src/main.ts src/utils.ts --clean --splitting",
     "test:only": "vitest run",
     "build:fast": "pnpm run build --no-dts"
   },
