@@ -28,6 +28,7 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "nanoid": "3"
+    "nanoid": "3",
+    "p-retry": "^6.2.0"
   }
 }

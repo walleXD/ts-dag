@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-
+import pRetry, { AbortError } from "p-retry";
 /**
  * A function that performs a task within a given context.
  * @template T - The type of the context.
@@ -58,10 +58,18 @@ export class Task<T extends Context, U extends unknown = unknown> {
     public name: string,
     public callback: TaskFunction<T, U>,
     public dependencies: Task<T>[] = [],
-  ) {}
+    public retryCount = 0,
+  ) {
+    if (retryCount < 0) {
+      throw new Error("retryCount cannot be negative");
+    }
+  }
 
   public async run(ctx: T): Promise<U> {
-    const output = await this.callback(ctx);
+    const output = await (this.retryCount > 0
+      ? pRetry(() => this.callback(ctx), { retries: this.retryCount })
+      : this.callback(ctx));
+
     this._output = output;
     return output;
   }
@@ -268,8 +276,9 @@ export class Dag<T extends Context = Context> {
     name: string,
     callback: (ctx: T) => U | Promise<U>,
     dependencies: Task<T>[] = [],
+    retryCount?: number,
   ): Task<T, U> {
-    const task = new Task<T, U>(name, callback, dependencies);
+    const task = new Task<T, U>(name, callback, dependencies, retryCount);
     this._tasks[name] = task;
 
     return task;
@@ -310,6 +319,28 @@ if (import.meta.vitest) {
         const task2 = dag.task("task2", async () => {}, [task1]);
 
         expect(task2.dependencies).toEqual([task1]);
+      });
+
+      // test out task retry
+      it("task retry on failure", async () => {
+        const dag = new Dag<{ hello: string }>();
+
+        const fn1 = vi.fn();
+        const task1 = dag.task(
+          "task1",
+          async () => {
+            fn1();
+            throw new Error("Task 1 failed");
+          },
+          [],
+          2,
+        );
+
+        try {
+          await dag.run();
+        } catch (error) {
+          expect(fn1).toHaveBeenCalledTimes(2);
+        }
       });
     });
 
