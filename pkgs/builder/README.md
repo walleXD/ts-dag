@@ -4,6 +4,8 @@
 
 ## Installation
 
+[![NPM](https://nodei.co/npm/@ts-dag/builder.png?mini=true)](https://npmjs.org/package/@ts-dag/builder)
+
 To install the module, use pnpm, npm or yarn:
 
 ```bash
