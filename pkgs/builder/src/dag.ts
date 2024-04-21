@@ -1,5 +1,11 @@
 import { nanoid } from "nanoid";
 import pRetry, { AbortError } from "p-retry";
+
+/**
+ * Specialized error type for aborting a task retry.
+ */
+export const AbortTaskRetryError = AbortError;
+
 /**
  * A function that performs a task within a given context.
  * @template T - The type of the context.
