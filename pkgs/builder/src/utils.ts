@@ -1,7 +1,14 @@
 import { Dag, Task, Context } from "./dag"; // Assuming the path to your DAG implementation
 import { vi } from "vitest";
 
-// Utility to create a mock task
+/**
+ * Creates a mock task for testing purposes.
+ *
+ * @param name - The name of the mock task.
+ * @param output - The output that the mock task should produce.
+ *
+ * @returns The created mock task. The task's run method and output getter are mocked to directly return the provided output.
+ */
 export function createMockTask<T extends Context, U>(
   name: string,
   output: U,
@@ -20,7 +27,16 @@ export function createMockTask<T extends Context, U>(
   return mockTask;
 }
 
-// Replaces specified tasks in a DAG with mocks
+/**
+ * Replaces tasks in a task graph with mock tasks for testing purposes.
+ *
+ * @template T - A type that extends from the Context interface.
+ *
+ * @param taskGraph - The task graph in which tasks should be replaced with mocks.
+ * @param  mocks - An object mapping task names to mock outputs. Each task with a name present in this object will be replaced with a mock task that produces the corresponding output.
+ *
+ * @returns The modified task graph with tasks replaced by mocks.
+ */
 export function replaceTasksWithMocks<T extends Context>(
   dag: Dag<T>,
   mocks: { [key: string]: Task<T, any> },
