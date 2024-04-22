@@ -10,8 +10,8 @@ export const AbortTaskRetryError = AbortError;
  * A function that performs a task within a given context.
  * @template T - The type of the context.
  * @template U - The type of the return value.
- * @param {T} ctx - The context in which the task is performed.
- * @returns {U | Promise<U>} - The result of the task.
+ * @param ctx - The context in which the task is performed.
+ * @returns - The result of the task.
  */
 export type TaskFunction<T extends Context, U extends unknown = unknown> = (
   ctx: T,
@@ -20,8 +20,8 @@ export type TaskFunction<T extends Context, U extends unknown = unknown> = (
 /**
  * A callback function that modifies a given context.
  * @template T - The type of the context.
- * @param {T} ctx - The context to be modified.
- * @returns {Partial<T> | void} - The modified context or nothing.
+ * @param ctx - The context to be modified.
+ * @returns - The modified context or nothing.
  */
 export type ContextCallback<T extends Context = Context> = (
   ctx: T,
@@ -30,8 +30,8 @@ export type ContextCallback<T extends Context = Context> = (
 /**
  * An asynchronous callback function that modifies a given context.
  * @template T - The type of the context.
- * @param {T} ctx - The context to be modified.
- * @returns {Promise<Partial<T> | void>} - A promise that resolves with the modified context or nothing.
+ * @param ctx - The context to be modified.
+ * @returns - A promise that resolves with the modified context or nothing.
  */
 export type AsyncContextCallback<T extends Context = Context> = (
   ctx: T,
@@ -54,15 +54,15 @@ export type Tasks<T extends Context> = Record<string, Task<T>>;
 /**
  * A class representing a task.
  * @template T - The type of the context in which the task is performed.
- * @template U - The type of the return value of the task.
+ * @template O - The type of the return value of the task.
  */
-export class Task<T extends Context, U extends unknown = unknown> {
-  private _output: U | undefined;
+export class Task<T extends Context, O extends unknown = unknown> {
+  private _output: O | undefined;
   public id = nanoid();
 
   constructor(
     public name: string,
-    public callback: TaskFunction<T, U>,
+    public callback: TaskFunction<T, O>,
     public dependencies: Task<T>[] = [],
     public retryCount = 0,
   ) {
@@ -81,7 +81,7 @@ export class Task<T extends Context, U extends unknown = unknown> {
    *
    * @returns A promise that resolves with the output of the task.
    */
-  public async run(ctx: T): Promise<U> {
+  public async run(ctx: T): Promise<O> {
     const output = await (this.retryCount > 0
       ? pRetry(() => this.callback(ctx), { retries: this.retryCount })
       : this.callback(ctx));
@@ -90,7 +90,7 @@ export class Task<T extends Context, U extends unknown = unknown> {
     return output;
   }
 
-  get output(): U {
+  get output(): O {
     if (this._output === undefined) {
       console.error(
         `Task ${this.name} output accessed before ${this.name} ran`,
@@ -106,7 +106,7 @@ export class Task<T extends Context, U extends unknown = unknown> {
 }
 
 /**
- * Represents an error that occurred while working with a TypeScript Directed Acyclic Graph (DAG).
+ * Represents an error that occurred while working with a Directed Acyclic Graph (DAG).
  *
  * @template T - The type of the context that the DAG uses.
  *
