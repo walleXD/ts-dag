@@ -9,7 +9,8 @@
   ],
   "homepage": "https://github.com/wallexd/ts-dag/tree/main/pkgs/visualizer",
   "repository": {
-    "url": "git+https://github.com/wallexd/ts-dag.git"
+    "url": "git+https://github.com/wallexd/ts-dag.git",
+    "directory": "pkgs/visualizer"
   },
   "author": "walleXD",
   "scripts": {
