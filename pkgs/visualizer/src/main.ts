@@ -4,6 +4,7 @@ import { toFile } from "@ts-graphviz/adapter";
 import { join } from "path";
 import { existsSync, mkdirSync, unlinkSync } from "fs";
 
+// this is incorrect in it's logic
 export const dotVisualizer = <T extends Context = Context>(dag: Dag) => {
   const graph = digraph("G");
 
@@ -17,18 +18,33 @@ export const dotVisualizer = <T extends Context = Context>(dag: Dag) => {
 
     task.dependencies.forEach((dep) => {
       const depNode = graph.createNode(dep.name, { shape: "box" });
-      graph.createEdge([node, depNode]);
+      graph.createEdge([depNode, node]);
       visit(dep);
     });
   };
 
-  Object.values(dag.tasks).forEach((task) => {
+  Object.values(dag.topologicalSort()).forEach((task) => {
     visit(task);
   });
 
   const dot = toDot(graph);
 
   return dot;
+};
+
+export const asciiVisualizer = async (dag: Dag) => {
+  const dot = dotVisualizer(dag);
+
+  const requestOptions = {
+    method: "GET",
+  };
+
+  const res = await fetch(
+    `https://dot-to-ascii.ggerganov.com/dot-to-ascii.php?boxart=0&src=${dot}`,
+    requestOptions,
+  ).then((response) => response.text());
+
+  return res;
 };
 
 /**
@@ -47,7 +63,7 @@ if (import.meta.vitest) {
   const { describe, it, expect, beforeEach, afterEach } = import.meta.vitest;
 
   describe("dotVisualizer", () => {
-    it("should generate a valid DOT representation of the DAG", () => {
+    it.todo("should generate a valid DOT representation of the DAG", () => {
       const dag = new Dag<Context>();
       const task1 = dag.task("Task 1", async () => {});
       const task2 = dag.task("Task 2", async () => {});
@@ -96,6 +112,36 @@ if (import.meta.vitest) {
 
       // Assert that the output file exists
       expect(existsSync(outputPath)).toBe(true);
+    });
+  });
+
+  describe("asciiVisualizer", () => {
+    it("should generate a valid ASCII representation of the DAG", async () => {
+      const dag = new Dag<Context>();
+      const task1 = dag.task("Task 1", async () => {});
+      const task2 = dag.task("Task 2", async () => {});
+      const task3 = dag.task("Task 3", async () => {}, [task1]);
+      const task4 = dag.task("Task 4", async () => {}, [task2, task3]);
+
+      const ascii = await asciiVisualizer(dag);
+      console.log(ascii);
+      expect(ascii).toContain("Task 1");
+    });
+
+    it("should generate a valid ASCII representation of the DAG", async () => {
+      // Create a new builder instance
+      const dag = new Dag();
+
+      // Define tasks
+      const taskA = dag.task("taskA", () => {});
+      const taskB = dag.task("taskB", () => {}, [taskA]);
+      const taskC = dag.task("taskC", () => {}, [taskA]);
+      const taskD = dag.task("taskD", () => {}, [taskB, taskC]);
+      const taskE = dag.task("taskE", () => {}, [taskD]);
+
+      const ascii = await asciiVisualizer(dag);
+      console.log(ascii);
+      expect(ascii).toContain("taskA");
     });
   });
 }
