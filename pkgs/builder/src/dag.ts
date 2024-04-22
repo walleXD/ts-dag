@@ -232,7 +232,7 @@ export class Dag<T extends Context = Context> {
    *
    * @returns An array of tasks in topologically sorted order.
    */
-  private topologicalSort(): Task<T>[] {
+  public topologicalSort(): Task<T>[] {
     const visited = new Set<Task<T>>();
     const sorted: Task<T>[] = [];
 
