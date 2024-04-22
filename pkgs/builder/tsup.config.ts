@@ -7,7 +7,7 @@ export default defineConfig({
     resolve: true,
     // build types for `src/index.ts` only
     // otherwise `Options` will not be exported by `tsup`, not sure how this happens, probably a bug in rollup-plugin-dts
-    entry: "./src/main.ts",
+    entry: ["./src/main.ts", "./src/utils.ts"],
   },
   define: {
     "import.meta.vitest": "undefined",
