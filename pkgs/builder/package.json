@@ -4,6 +4,7 @@
   "private": false,
   "description": "Build and execute a directed acyclic graph of tasks",
   "main": "dist/main.js",
+  "type": "commonjs",
   "files": [
     "/dist"
   ],
@@ -28,7 +29,7 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "nanoid": "3",
-    "p-retry": "^6.2.0"
+    "nanoid": "^3.3.7",
+    "p-retry": "^4.6.2"
   }
 }
