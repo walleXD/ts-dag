@@ -7,9 +7,6 @@
 The `ts-dag` ecosystem consists of the following packages:
 
 - [`@ts-dag/builder`](./pkgs/builder): A library for building and running directed acyclic graphs (DAGs) of tasks.
-
-### Coming Soon
-
 - [`@ts-dag/visualizer`](./pkgs/visualizer): A tool for visualizing and debugging DAGs and data pipelines.
 
 <!-- - [`@ts-dag/scheduler`](./packages/scheduler): A scheduling library for executing tasks and DAGs at specific intervals or based on events. -->
