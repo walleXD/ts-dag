@@ -22,7 +22,7 @@
   "keywords": [],
   "license": "mit",
   "peerDependencies": {
-    "@ts-dag/builder": "0.1.0-alpha.1"
+    "@ts-dag/builder": "0.1.0-alpha.3"
   },
   "dependencies": {
     "@ts-graphviz/adapter": "^2.0.2",
