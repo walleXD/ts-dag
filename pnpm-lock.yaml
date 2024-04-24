@@ -36,19 +36,13 @@ importers:
 
   pkgs/simple-lock-state:
     dependencies:
-      '@ts-graphviz/adapter':
-        specifier: ^2.0.2
-        version: 2.0.2
+      '@ts-dag/builder':
+        specifier: ^0.1.0-alpha.4
+        version: 0.1.0-alpha.4
       async-await-mutex-lock:
         specifier: ^1.0.11
         version: 1.0.11
-      ts-graphviz:
-        specifier: ^2.1.1
-        version: 2.1.1
     devDependencies:
-      '@ts-dag/builder':
-        specifier: workspace:*
-        version: link:../builder
       '@types/node':
         specifier: '20'
         version: 20.12.7
@@ -517,6 +511,9 @@ packages:
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
+
+  '@ts-dag/builder@0.1.0-alpha.4':
+    resolution: {integrity: sha512-56Hg7BB1z3CyH7GnmC1ViKcKA8B2eoMzCfW1xdOAGwgVtELjGOACEWvWMRT5DhT4Nrw5nhNLQXd1RwrHbG0dAg==}
 
   '@ts-graphviz/adapter@2.0.2':
     resolution: {integrity: sha512-zSGszRZAK2ATObOd7MeF3qvF91HMRxGQaQuuyTYexkDt5p9nkXbt/4CBByoF4elF+/ol2Ge1oUEs+uPtD8X9aA==}
@@ -1607,6 +1604,11 @@ snapshots:
     optional: true
 
   '@sinclair/typebox@0.27.8': {}
+
+  '@ts-dag/builder@0.1.0-alpha.4':
+    dependencies:
+      nanoid: 3.3.7
+      p-retry: 4.6.2
 
   '@ts-graphviz/adapter@2.0.2':
     dependencies:

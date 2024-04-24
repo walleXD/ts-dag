@@ -1,6 +1,6 @@
 {
   "name": "@ts-dag/simple-lock-state",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "private": false,
   "description": "Simple shared state library with locking",
   "main": "dist/main.js",
@@ -26,9 +26,7 @@
     "@ts-dag/builder": "^0.1.0-alpha.4"
   },
   "dependencies": {
-    "@ts-graphviz/adapter": "^2.0.2",
-    "async-await-mutex-lock": "^1.0.11",
-    "ts-graphviz": "^2.1.1"
+    "async-await-mutex-lock": "^1.0.11"
   },
   "devDependencies": {
     "@types/node": "20",
