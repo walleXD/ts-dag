@@ -29,6 +29,7 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
+    "@ts-dag/simple-lock-state": "workspace:*",
     "nanoid": "^3.3.7",
     "p-retry": "^4.6.2"
   }

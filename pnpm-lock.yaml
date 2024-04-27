@@ -14,6 +14,9 @@ importers:
 
   pkgs/builder:
     dependencies:
+      '@ts-dag/simple-lock-state':
+        specifier: workspace:*
+        version: link:../simple-lock-state
       nanoid:
         specifier: ^3.3.7
         version: 3.3.7
