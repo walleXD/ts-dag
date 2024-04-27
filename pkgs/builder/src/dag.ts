@@ -42,6 +42,10 @@ export type AsyncContextCallback<T extends Context = Context> = (
   ctx: T,
 ) => Promise<Partial<T> | void>;
 
+export type ExtenderCallback<T extends Context = Context> = (
+  ctx: T,
+) => Promise<void | (() => void | Promise<void>)>;
+
 /**
  * An interface representing a context.
  * A context is an object that can have any number of properties of any type.
@@ -231,6 +235,7 @@ export interface Meta<S extends State> {
 
 /**
  * A class representing a directed acyclic graph (DAG) of tasks.
+ *
  * @template T - The type of the context in which the tasks are performed.
  * @template S - The type of shared state.
  */
@@ -243,6 +248,8 @@ export class Dag<T extends Context = Context, S extends State = State> {
     | ContextCallback<T>
     | AsyncContextCallback<T>;
 
+  private _extenderCb: ExtenderCallback<T>[] = [];
+  private _extenderCleanupCb: (() => void | Promise<void>)[] = [];
   get tasks(): Tasks<T, S> {
     return this._tasks;
   }
@@ -265,6 +272,54 @@ export class Dag<T extends Context = Context, S extends State = State> {
 
     this.meta.state = createSls(initialState);
     return this;
+  }
+
+  /**
+   * Add an extender to the DAG. Extenders are used to modify the context before the tasks are run.
+   *
+   * They can be used to add properties to the context, modify existing properties, or perform any other necessary setup.
+   * They allow for a clean and modular way to extend the functionality of the DAG.
+   *
+   * The extender callback can be used as setup function and return a cleanup function that will be called after the DAG has completed.
+   *
+   * @param cb - The callback function to be added.
+   *
+   * @returns - Returns the Dag instance for method chaining.
+   */
+  public useExtender(cb: ExtenderCallback<T>) {
+    this._extenderCb.push(cb);
+    return this;
+  }
+
+  /**
+   * Asynchronously loads all extender callbacks.
+   *
+   * Each callback is invoked with the current context. If a callback returns a function,
+   * that function is added to the list of cleanup callbacks to be invoked when the DAG is destroyed.
+   *
+   * This method is typically called during the initialization of the DAG.
+   */
+  private async loadExtenders() {
+    for (const cb of this._extenderCb) {
+      const cleanupCb = await Promise.resolve(cb(this.ctx));
+      if (typeof cleanupCb === "function") {
+        this._extenderCleanupCb.push(cleanupCb);
+      }
+    }
+  }
+
+  /**
+   * Asynchronously cleans up all extender callbacks.
+   *
+   * Each cleanup callback is invoked without any arguments. If a callback returns a Promise,
+   * that Promise is awaited before the next cleanup callback is invoked.
+   *
+   * This method is typically called during the destruction of the DAG.
+   */
+  private async cleanupExtenders() {
+    for (const cb of this._extenderCleanupCb) {
+      await Promise.resolve(cb());
+    }
   }
 
   /**
@@ -336,6 +391,8 @@ export class Dag<T extends Context = Context, S extends State = State> {
    */
   public async run(): Promise<void> {
     await this.loadContext();
+    await this.loadExtenders();
+
     // Run tasks
 
     const sortedTasks = this.topologicalSort();
@@ -351,7 +408,6 @@ export class Dag<T extends Context = Context, S extends State = State> {
         const taskDeps = task.dependencies.map((dep) => taskPromises.get(dep));
 
         try {
-          // TODO: handle dependency errors
           await Promise.all(taskDeps);
         } catch (error) {
           if (error instanceof Error) {
@@ -381,7 +437,9 @@ export class Dag<T extends Context = Context, S extends State = State> {
     try {
       // Wait for all tasks to complete
       await Promise.allSettled(taskPromises.values());
+      await this.cleanupExtenders();
     } catch (error) {
+      await this.cleanupExtenders();
       if (error instanceof UnknownDagError || error instanceof DagError) {
         console.error(error.name, error.message, error);
         throw error;
@@ -503,6 +561,61 @@ if (import.meta.vitest) {
         } catch (error) {
           expect(fn1).toHaveBeenCalledTimes(2);
         }
+      });
+    });
+
+    describe("extender", () => {
+      it("should run extender", async () => {
+        const fn1 = vi.fn();
+        const dag = new Dag<{ foo: string }>().useExtender(async (ctx) => {
+          ctx.foo = "bar";
+          return () => {
+            fn1();
+          };
+        });
+
+        const task1 = dag.task("task1", (ctx) => {
+          expect(ctx.foo).toBe("bar");
+        });
+
+        await dag.run();
+        expect(fn1).toHaveBeenCalledOnce();
+      });
+
+      it("should run multiple extenders", async () => {
+        const fn1 = vi.fn(async () => {});
+        const fn2 = vi.fn(async () => {});
+        const fn3 = vi.fn(async () => {});
+        const fn4 = vi.fn(async () => {});
+        const fn5 = vi.fn(async () => {});
+        const dag = new Dag<{ foo: string }>()
+          .useExtender(async (ctx) => {
+            await fn1();
+            return async () => fn2();
+          })
+          .useExtender(async (ctx) => {
+            await fn3();
+            return async () => fn4();
+          });
+
+        const task1 = dag.task("task1", fn5);
+
+        await dag.run();
+        expect(fn1).toHaveBeenCalledOnce();
+        expect(fn2).toHaveBeenCalledOnce();
+        expect(fn3).toHaveBeenCalledOnce();
+        expect(fn4).toHaveBeenCalledOnce();
+        expect(fn5).toHaveBeenCalledOnce();
+
+        expect(fn1.mock.invocationCallOrder[0]).toBeLessThan(
+          fn3.mock.invocationCallOrder[0],
+        );
+        expect(fn2.mock.invocationCallOrder[0]).toBeLessThan(
+          fn4.mock.invocationCallOrder[0],
+        );
+        expect(fn5.mock.invocationCallOrder[0]).toBeLessThan(
+          fn2.mock.invocationCallOrder[0],
+        );
       });
     });
 
