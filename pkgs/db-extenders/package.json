@@ -2,7 +2,7 @@
   "name": "@ts-dag/db-extenders",
   "version": "0.1.0-alpha.1",
   "private": false,
-  "description": "MSSQL extenders for @ts-dag",
+  "description": "DB extenders for @ts-dag",
   "main": "dist/main.js",
   "files": [
     "/dist"
