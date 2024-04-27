@@ -407,7 +407,7 @@ export class Dag<T extends Context = Context, S extends State = State> {
    *
    * @throws {DagError} If the context has already been set for this DAG instance.
    */
-  context(
+  useContext(
     ctxOrCallback: Partial<T> | ContextCallback<T> | AsyncContextCallback<T>,
   ): this {
     if (this._ctxOrCallback) {
@@ -509,7 +509,7 @@ if (import.meta.vitest) {
     describe("error handling", () => {
       it("should throw an error if context is set multiple times", () => {
         expect(() =>
-          new Dag().context({ foo: "bar" }).context({ foo: "bar" }),
+          new Dag().useContext({ foo: "bar" }).useContext({ foo: "bar" }),
         ).toThrowError(DagError);
       });
 
@@ -554,7 +554,7 @@ if (import.meta.vitest) {
       it("object", async () => {
         // it setting context with object
         const dag = new Dag();
-        dag.context({ foo: "bar" });
+        dag.useContext({ foo: "bar" });
 
         const task1 = dag.task("task1", (ctx) => {
           expect(ctx.foo).toBe("bar");
@@ -566,7 +566,7 @@ if (import.meta.vitest) {
       it("callback", async () => {
         // it setting context with callback
         const dag = new Dag();
-        dag.context((ctx) => ({ foo: "bar" }));
+        dag.useContext((ctx) => ({ foo: "bar" }));
         const task1 = dag.task("task1", (ctx) => {
           expect(ctx.foo).toBe("bar");
         });
@@ -576,7 +576,7 @@ if (import.meta.vitest) {
       it("async callback", async () => {
         // it setting context with async callback
         const dag = new Dag();
-        dag.context(async (ctx) => ({ foo: "bar" }));
+        dag.useContext(async (ctx) => ({ foo: "bar" }));
         const task1 = dag.task("task1", (ctx) => {
           expect(ctx.foo).toBe("bar");
         });
@@ -589,7 +589,7 @@ if (import.meta.vitest) {
 
       beforeEach(() => {
         dag = new Dag();
-        dag.context({ foo: "bar" });
+        dag.useContext({ foo: "bar" });
       });
 
       it("simple dag", async () => {
