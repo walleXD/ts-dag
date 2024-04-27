@@ -2,7 +2,7 @@
   "name": "ts-dag",
   "description": "",
   "scripts": {},
-  "packageManager": "pnpm@9.0.5",
+  "packageManager": "pnpm@9.0.6",
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
