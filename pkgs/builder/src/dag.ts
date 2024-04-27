@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import pRetry, { AbortError } from "p-retry";
+import createSls, { State } from "@ts-dag/simple-lock-state";
 
 /**
  * Specialized error type for aborting a task retry.
@@ -13,9 +14,12 @@ export const AbortTaskRetryError = AbortError;
  * @param ctx - The context in which the task is performed.
  * @returns - The result of the task.
  */
-export type TaskFunction<T extends Context, U extends unknown = unknown> = (
-  ctx: T,
-) => U | Promise<U>;
+export type TaskFunction<
+  T extends Context,
+  S extends State,
+  U extends unknown = unknown,
+  M extends Meta<S> = Meta<S>,
+> = (ctx: T, meta: M) => U | Promise<U>;
 
 /**
  * A callback function that modifies a given context.
@@ -49,21 +53,28 @@ export interface Context {
  * A record of tasks with their names as keys and the tasks themselves as values.
  * @template T - The type of the context in which the tasks are performed.
  */
-export type Tasks<T extends Context> = Record<string, Task<T>>;
+export type Tasks<T extends Context, S extends State> = Record<
+  string,
+  Task<T, S>
+>;
 
 /**
  * A class representing a task.
  * @template T - The type of the context in which the task is performed.
  * @template O - The type of the return value of the task.
  */
-export class Task<T extends Context, O extends unknown = unknown> {
-  private _output: O | undefined;
+export class Task<
+  T extends Context,
+  S extends State,
+  O extends unknown = unknown,
+> {
+  private _output?: O;
   public id = nanoid();
 
   constructor(
     public name: string,
-    public callback: TaskFunction<T, O>,
-    public dependencies: Task<T>[] = [],
+    public callback: TaskFunction<T, S>,
+    public dependencies: Task<T, S>[] = [],
     public retryCount = 0,
   ) {
     if (retryCount < 0) {
@@ -81,13 +92,13 @@ export class Task<T extends Context, O extends unknown = unknown> {
    *
    * @returns A promise that resolves with the output of the task.
    */
-  public async run(ctx: T): Promise<O> {
+  public async run(ctx: T, meta: Meta<S>): Promise<O> {
     const output = await (this.retryCount > 0
-      ? pRetry(() => this.callback(ctx), { retries: this.retryCount })
-      : this.callback(ctx));
+      ? pRetry(() => this.callback(ctx, meta), { retries: this.retryCount })
+      : this.callback(ctx, meta));
 
-    this._output = output;
-    return output;
+    this._output = output as O;
+    return this._output;
   }
 
   get output(): O {
@@ -120,7 +131,7 @@ export class TsDagError<T extends Context = Context> extends Error {
     public name: string,
     public message: string,
     public cause?: any,
-    public task?: Task<T>,
+    public task?: Task<T, State>,
   ) {
     super(message, { cause: cause });
   }
@@ -146,13 +157,14 @@ export class DagError<T extends Context = Context> extends TsDagError<T> {
     dependentTaskExecutionError: "DependentTaskExecutionError",
     executionError: "ExecutionError",
     multipleContextAssignmentError: "MultipleContextAssignmentError",
+    multipleStateInitializationError: "multipleStateInitializationError",
   } as const;
 
   constructor(
     public name: DagErrorName,
     public message: string,
     public cause?: any,
-    public task?: Task<T>,
+    public task?: Task<T, State>,
   ) {
     super(name, message, cause, task);
   }
@@ -182,7 +194,7 @@ export class TaskError<T extends Context = Context> extends TsDagError<T> {
     public name: TaskErrorName,
     public message: string,
     public cause?: any,
-    public task?: Task<T>,
+    public task?: Task<T, State>,
   ) {
     super(name, message, cause, task);
   }
@@ -203,25 +215,42 @@ export class TaskError<T extends Context = Context> extends TsDagError<T> {
 export class UnknownDagError<
   T extends Context = Context,
 > extends TsDagError<T> {
-  constructor(message: string, cause: any, task?: Task<T>) {
+  constructor(message: string, cause: any, task?: Task<T, State>) {
     super("UnknownDagError", message, cause, task);
   }
+}
+
+export interface Meta<S extends State> {
+  state: ReturnType<typeof createSls<S>>;
 }
 
 /**
  * A class representing a directed acyclic graph (DAG) of tasks.
  * @template T - The type of the context in which the tasks are performed.
  */
-export class Dag<T extends Context = Context> {
-  private _tasks: Tasks<T> = {};
+export class Dag<T extends Context = Context, S extends State = State> {
+  private _tasks: Tasks<T, S> = {};
   private ctx: T = {} as T;
+  private meta: Meta<S> = {} as Meta<S>;
   private _ctxOrCallback?:
     | Partial<T>
     | ContextCallback<T>
     | AsyncContextCallback<T>;
 
-  get tasks(): Tasks<T> {
+  get tasks(): Tasks<T, S> {
     return this._tasks;
+  }
+
+  public useState(initialState: S) {
+    if (this.meta.state) {
+      throw new DagError(
+        DagError.errors.multipleStateInitializationError,
+        "State can only be set once per DAG instance",
+      );
+    }
+
+    this.meta.state = createSls(initialState);
+    return this;
   }
 
   /**
@@ -232,11 +261,11 @@ export class Dag<T extends Context = Context> {
    *
    * @returns An array of tasks in topologically sorted order.
    */
-  public topologicalSort(): Task<T>[] {
-    const visited = new Set<Task<T>>();
-    const sorted: Task<T>[] = [];
+  public topologicalSort(): Task<T, S>[] {
+    const visited = new Set<Task<T, S>>();
+    const sorted: Task<T, S>[] = [];
 
-    const visit = (task: Task<T>) => {
+    const visit = (task: Task<T, S>) => {
       if (visited.has(task)) return;
       visited.add(task);
 
@@ -298,7 +327,7 @@ export class Dag<T extends Context = Context> {
     const sortedTasks = this.topologicalSort();
 
     // Create a map to store the promises of running each task
-    const taskPromises = new Map<Task<T>, Promise<unknown>>();
+    const taskPromises = new Map<Task<T, S>, Promise<unknown>>();
 
     // Iterate over the sorted tasks
     for (const task of sortedTasks) {
@@ -316,18 +345,18 @@ export class Dag<T extends Context = Context> {
               DagError.errors.dependentTaskExecutionError,
               `Task ${task.name} failed to run due to dependency failure`,
               error.stack,
-              task,
+              task as unknown as Task<T, State>,
             );
           }
 
           throw new UnknownDagError(
             "Unknown error while running a task",
             error,
-            task,
+            task as unknown as Task<T, State>,
           );
         }
 
-        const output = await task.run(this.ctx);
+        const output = await task.run(this.ctx, this.meta);
         return output;
       })();
 
@@ -393,11 +422,11 @@ export class Dag<T extends Context = Context> {
    */
   task<U extends unknown = unknown>(
     name: string,
-    callback: (ctx: T) => U | Promise<U>,
-    dependencies: Task<T>[] = [],
+    callback: (ctx: T, meta: Meta<S>) => U | Promise<U>,
+    dependencies: Task<T, S>[] = [],
     retryCount?: number,
-  ): Task<T, U> {
-    const task = new Task<T, U>(name, callback, dependencies, retryCount);
+  ): Task<T, S, U> {
+    const task = new Task<T, S, U>(name, callback, dependencies, retryCount);
     this._tasks[name] = task;
 
     return task;
@@ -427,9 +456,9 @@ if (import.meta.vitest) {
       });
 
       it("it type", () => {
-        const dag = new Dag<{ hello: string }>();
+        const dag = new Dag<{ hello: string }, {}>();
         const task1 = dag.task("task1", () => {});
-        assertType<Task<{ hello: string }, void>>(task1);
+        assertType<Task<{ hello: string }, {}, void>>(task1);
       });
 
       it("task dependencies", () => {
@@ -715,9 +744,37 @@ if (import.meta.vitest) {
     });
   });
 
+  // write tests to test meta and state
+  describe("State", () => {
+    it("should use state", async () => {
+      const dag = new Dag<{}, { count: number }>().useState({ count: 0 });
+      const state = { count: 0 };
+
+      const incrementTask = dag.task("increment", async (ctx, meta) => {
+        const val = await meta.state.get("count");
+      });
+    });
+
+    it("should use state", async () => {
+      const dag = new Dag<{}, { count: number }>().useState({ count: 0 });
+
+      const incrementTask = dag.task("increment", async (ctx, meta) => {
+        await meta.state.set("count", 1);
+      });
+
+      const decrementTask = dag.task("decrement", async (ctx, meta) => {
+        await meta.state.set("count", -1);
+        return meta.state.get("count");
+      });
+
+      await dag.run();
+      expect(decrementTask.output).toBe(-1);
+    });
+  });
+
   describe("type its", () => {
     it("should match TaskFunction type", () => {
-      assertType<TaskFunction<Context, string>>((ctx: Context) => "");
+      assertType<TaskFunction<Context, {}, string>>((ctx: Context) => "");
       assertType<TaskFunction<Context, Promise<number>>>((ctx: Context) =>
         Promise.resolve(0),
       );
@@ -741,13 +798,13 @@ if (import.meta.vitest) {
     });
 
     it("should match Tasks type", () => {
-      assertType<Tasks<Context>>({});
-      assertType<Tasks<Context>>({ task1: new Task("task1", (ctx) => {}) });
+      assertType<Tasks<Context, {}>>({});
+      assertType<Tasks<Context, {}>>({ task1: new Task("task1", (ctx) => {}) });
     });
 
     it("should match Task type", () => {
-      assertType<Task<Context, string>>(new Task("task1", (ctx) => ""));
-      assertType<Task<Context, number>>(
+      assertType<Task<Context, {}, string>>(new Task("task1", (ctx) => ""));
+      assertType<Task<Context, {}, number>>(
         new Task("task1", (ctx) => Promise.resolve(0)),
       );
     });

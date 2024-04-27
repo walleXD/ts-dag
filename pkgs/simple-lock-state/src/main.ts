@@ -1,6 +1,6 @@
 import { Lock } from "async-await-mutex-lock";
 
-interface State {
+export interface State {
   [key: string]: any;
 }
 
@@ -101,7 +101,7 @@ function createLockedState<T extends State>(initialState: T = {} as T) {
 export default createLockedState;
 
 if (import.meta.vitest) {
-  const { it, describe, expect } = import.meta.vitest;
+  const { it, describe, expect, assertType } = import.meta.vitest;
 
   describe("createLockedState", () => {
     it("should create a locked state", async () => {
@@ -123,6 +123,11 @@ if (import.meta.vitest) {
 
       const all = await state.getAll();
       expect(all).toEqual({ key1: "value1", key2: "value2" });
+    });
+
+    it("should return correct types for properties", async () => {
+      const state = createLockedState({ key1: "value1", key2: 2 });
+      assertType<Promise<string>>(state.get("key1"));
     });
 
     it("should set all values", async () => {
