@@ -247,6 +247,14 @@ export class Dag<T extends Context = Context, S extends State = State> {
     return this._tasks;
   }
 
+  /**
+   * This method is used to set the initial shared locked state in the DAG (Directed Acyclic Graph).
+   * It throws an error if the state has already been set, ensuring that the state can only be set once per DAG instance.
+   *
+   * @param initialState - The initial locked state to be set for the DAG.
+   * @returns The DAG instance with the state set.
+   * @throws {DagError} - Throws an error if the state has already been set.
+   */
   public useState(initialState: S) {
     if (this.meta.state) {
       throw new DagError(
@@ -323,8 +331,8 @@ export class Dag<T extends Context = Context, S extends State = State> {
    *
    * @returns A promise that resolves when all tasks have completed. If any task fails, the promise is rejected with the error that caused the failure.
    *
-   * @throws If an unknown error occurs while running a task, an `UnknownDagError` is thrown.
-   * @throws If a task fails due to a dependency failure, a `DagError` is thrown.
+   * @throws {UnknownDagError} If an unknown error occurs while running a task, an `UnknownDagError` is thrown.
+   * @throws {DagError} If a task fails due to a dependency failure, a `DagError` is thrown.
    */
   public async run(): Promise<void> {
     await this.loadContext();
@@ -397,7 +405,7 @@ export class Dag<T extends Context = Context, S extends State = State> {
    *
    * @returns The current DAG instance, allowing for method chaining.
    *
-   * @throws If the context has already been set for this DAG instance.
+   * @throws {DagError} If the context has already been set for this DAG instance.
    */
   context(
     ctxOrCallback: Partial<T> | ContextCallback<T> | AsyncContextCallback<T>,
