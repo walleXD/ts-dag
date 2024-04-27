@@ -4,7 +4,6 @@ import { toFile } from "@ts-graphviz/adapter";
 import { join } from "path";
 import { existsSync, mkdirSync, unlinkSync } from "fs";
 
-// this is incorrect in it's logic
 export const dotVisualizer = <T extends Context = Context>(dag: Dag) => {
   const graph = digraph("G");
 
