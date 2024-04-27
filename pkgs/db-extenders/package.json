@@ -1,0 +1,39 @@
+{
+  "name": "@ts-dag/db-extenders",
+  "version": "0.1.0-alpha.1",
+  "private": false,
+  "description": "MSSQL extenders for @ts-dag",
+  "main": "dist/main.js",
+  "files": [
+    "/dist"
+  ],
+  "homepage": "https://github.com/wallexd/ts-dag/tree/main/pkgs/simple-lock-state",
+  "repository": {
+    "url": "git+https://github.com/wallexd/ts-dag.git",
+    "directory": "pkgs/simple-lock-state"
+  },
+  "author": "walleXD",
+  "scripts": {
+    "test": "pnpm run build & pnpm run test:only",
+    "dev": "pnpm run build:fast --watch",
+    "build": "tsup-node src/main.ts --clean --splitting",
+    "test:only": "vitest run",
+    "build:fast": "pnpm run build --no-dts"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "peerDependencies": {
+    "@ts-dag/builder": "workspace:*",
+    "mssql": ">=10"
+  },
+  "devDependencies": {
+    "@testcontainers/mssqlserver": "^10.9.0",
+    "@ts-dag/builder": "workspace:*",
+    "@types/mssql": "^9.1.5",
+    "@types/node": "20",
+    "mssql": "^10.0.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.0"
+  }
+}
