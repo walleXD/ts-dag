@@ -10,6 +10,7 @@ export const AbortTaskRetryError = AbortError;
 /**
  * A function that performs a task within a given context.
  * @template T - The type of the context.
+ * @template S - The type of shared state.
  * @template U - The type of the return value.
  * @param ctx - The context in which the task is performed.
  * @returns - The result of the task.
@@ -52,6 +53,7 @@ export interface Context {
 /**
  * A record of tasks with their names as keys and the tasks themselves as values.
  * @template T - The type of the context in which the tasks are performed.
+ * @template S - The type of shared state.
  */
 export type Tasks<T extends Context, S extends State> = Record<
   string,
@@ -61,6 +63,7 @@ export type Tasks<T extends Context, S extends State> = Record<
 /**
  * A class representing a task.
  * @template T - The type of the context in which the task is performed.
+ * @template S - The type of shared state.
  * @template O - The type of the return value of the task.
  */
 export class Task<
@@ -86,9 +89,11 @@ export class Task<
    * Runs the task with the provided context.
    *
    * @template T - The type of the context that the task requires.
-   * @template U - The type of the output that the task produces.
+   * @template S - The type of shared state.
+   * @template O - The type of the output that the task produces.
    *
    * @param ctx - The context to run the task with.
+   * @param meta  - The meta object containing runtime states.
    *
    * @returns A promise that resolves with the output of the task.
    */
@@ -227,6 +232,7 @@ export interface Meta<S extends State> {
 /**
  * A class representing a directed acyclic graph (DAG) of tasks.
  * @template T - The type of the context in which the tasks are performed.
+ * @template S - The type of shared state.
  */
 export class Dag<T extends Context = Context, S extends State = State> {
   private _tasks: Tasks<T, S> = {};
