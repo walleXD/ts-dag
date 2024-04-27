@@ -1,3 +1,4 @@
+import createLockedState from "@ts-dag/simple-lock-state";
 import { Dag, Task, Context } from "./dag"; // Assuming the path to your DAG implementation
 import { vi } from "vitest";
 
@@ -12,9 +13,9 @@ import { vi } from "vitest";
 export function createMockTask<T extends Context, U>(
   name: string,
   output: U,
-): Task<T, U> {
+): Task<T, {}, U> {
   const mockFunction = vi.fn(() => Promise.resolve(output));
-  const mockTask = new Task<T, U>(name, mockFunction);
+  const mockTask = new Task<T, {}, U>(name, mockFunction);
 
   // Replace the run method to directly return the mocked output
   mockTask.run = vi.fn(() => Promise.resolve(output));
@@ -63,7 +64,8 @@ if (import.meta.vitest) {
 
     it("mocks the run method", async () => {
       const mockTask = createMockTask("mockTask", "mockOutput");
-      const output = await mockTask.run({});
+      const state = createLockedState();
+      const output = await mockTask.run({}, { state });
       expect(output).toBe("mockOutput");
     });
 
