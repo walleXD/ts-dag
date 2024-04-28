@@ -57,3 +57,7 @@ interface MyContext extends ContextWithMSSQL {
 ```
 
 In the above example, `MyContext` is an interface that extends `ContextWithMSSQL`, adding a `mssql` property of type `sql.ConnectionPool` to the context.
+
+## API Reference
+
+Find out more about the API in the [docs](https://wallexd.github.io/ts-dag/modules/_ts_dag_builder.html).

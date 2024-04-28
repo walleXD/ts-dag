@@ -42,50 +42,9 @@ await dag.run();
 
 ## API Reference
 
-### Types
+Find out more about the API in the [docs](https://wallexd.github.io/ts-dag/modules/_ts_dag_builder.html).
 
-#### `TaskFunction<T, U>`
-
-- **Type:** `(ctx: T) => U | Promise<U>`
-- **Description:** A function that defines the work of a task. It can be synchronous or asynchronous.
-
-#### `ContextCallback<T>`
-
-- **Type:** `(ctx: T) => Partial<T> | void`
-- **Description:** A function used to modify or update the context synchronously.
-
-#### `AsyncContextCallback<T>`
-
-- **Type:** `(ctx: T) => Promise<Partial<T> | void>`
-- **Description:** A function used to modify or update the context asynchronously.
-
-#### `Context`
-
-- **Type:** `{ [key: string]: any }`
-- **Description:** An interface representing the context passed to tasks. It can hold any key-value pairs.
-
-#### `Tasks<T>`
-
-- **Type:** `Record<string, Task<T>>`
-- **Description:** A record type mapping task names to task instances.
-
-### Classes
-
-#### `Task<T, U>`
-
-- **Constructor:** `(name: string, callback: TaskFunction<T, U>, dependencies: Task<T>[] = [])`
-- **Methods:**
-  - `run(ctx: T): Promise<U>`: Executes the task using the provided context.
-  - `output`: Getter that returns the result of the task. Throws if accessed before the task is run.
-
-#### `Dag<T>`
-
-- **Methods:**
-  - `task<U>(name: string, callback: TaskFunction<T, U>, dependencies: Task<T>[] = []): Task<T, U>`: Registers a new task.
-  - `context(ctxOrCallback: Partial<T> | ContextCallback<T> | AsyncContextCallback<T>): this`: Sets the initial context or a method to derive it.
-  - `run(): Promise<void>`: Executes all tasks in the DAG respecting their dependencies.
-
-### Examples
+### More Examples
 
 #### Basic Task Setup
 

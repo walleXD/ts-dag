@@ -19,36 +19,9 @@ import { createLockedState } from "@ts-dag/simple-locked-state";
 const state = createLockedState<{ count: number }>({ count: 0 });
 ```
 
-### API
+## API Reference
 
-#### `get(key)`
-
-Asynchronously gets the value of the specified key from the state. If the key is currently locked, it waits for the lock to be released before retrieving the value.
-
-- **Parameters**: `key` - The key of the value to get.
-- **Returns**: A promise that resolves with the value of the specified key.
-
-#### `set(key, value)`
-
-Asynchronously sets the value of the specified key in the state. If the key is currently locked, it waits for the lock to be released before setting the value.
-
-- **Parameters**:
-  - `key` - The key of the value to set.
-  - `value` - The new value to set.
-- **Returns**: A promise that resolves with "OK" when the value has been set.
-
-#### `getAll()`
-
-Asynchronously retrieves all key-value pairs from the state. If any key is currently locked, it waits for the lock to be released before getting the values.
-
-- **Returns**: A promise that resolves with an object containing all key-value pairs in the state.
-
-#### `setAll(newState)`
-
-Asynchronously sets multiple key-value pairs in the state. If any key is currently locked, it waits for the lock to be released before setting the values.
-
-- **Parameters**: `newState` - An object containing the key-value pairs to set.
-- **Returns**: A promise that resolves with "OK" when all values have been set.
+Find out more about the API in the [docs](https://wallexd.github.io/ts-dag/modules/_ts_dag_simple_lock_state.html).
 
 ## Example
 

@@ -55,3 +55,7 @@ const dag = // your DAG here
 const outputVisualizer = createOutputVisualizer('png');
 await outputVisualizer(dag, './path/to/output.png');
 ```
+
+## API Reference
+
+Find out more about the API in the [docs](https://wallexd.github.io/ts-dag/modules/_ts_dag_visualizer.html).
