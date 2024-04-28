@@ -1,11 +1,18 @@
 {
   "name": "ts-dag",
   "description": "",
-  "scripts": {},
   "packageManager": "pnpm@9.0.5",
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
-    "turbo": "^1.13.2"
+    "turbo": "^1.13.2",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "turbo build",
+    "start": "turbo dev",
+    "docs:all": "turbo docs",
+    "docs": "typedoc"
   }
 }

@@ -1,0 +1,9 @@
+{
+  "entryPoints": ["pkgs/*"],
+  "name": "TS-DAG pkgs",
+  "entryPointStrategy": "packages",
+  "includeVersion": false
+
+  // Potentially useful for debugging
+  // "logLevel": "Verbose"
+}

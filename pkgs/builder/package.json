@@ -18,12 +18,15 @@
     "dev": "pnpm run build:fast --watch",
     "build": "tsup-node src/main.ts src/utils.ts --clean --splitting",
     "test:only": "vitest run",
-    "build:fast": "pnpm run build --no-dts"
+    "build:fast": "pnpm run build --no-dts",
+    "docs": "typedoc --out docs"
   },
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
     "@vitest/coverage-v8": "^1.5.0",
+    "pino-debug": "^2.0.0",
+    "pino-dev": "^4.0.3",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5",
     "vitest": "^1.5.0"
@@ -31,6 +34,7 @@
   "dependencies": {
     "@ts-dag/simple-lock-state": "workspace:*",
     "nanoid": "^3.3.7",
-    "p-retry": "^4.6.2"
+    "p-retry": "^4.6.2",
+    "pino": "^9.0.0"
   }
 }

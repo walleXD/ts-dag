@@ -4,6 +4,9 @@
     "build": {
       "outputs": ["dist/**"]
     },
+    "docs": {
+      "outputs": ["docs/**"]
+    },
     "type-check": {}
   }
 }

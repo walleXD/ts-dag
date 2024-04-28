@@ -18,7 +18,8 @@
     "dev": "pnpm run build:fast --watch",
     "build": "tsup-node src/main.ts --clean --splitting",
     "test:only": "vitest run",
-    "build:fast": "pnpm run build --no-dts"
+    "build:fast": "pnpm run build --no-dts",
+    "docs": "typedoc --out docs"
   },
   "keywords": [],
   "license": "MIT",
