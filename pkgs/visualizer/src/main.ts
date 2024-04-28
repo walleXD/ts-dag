@@ -7,9 +7,9 @@ import { existsSync, mkdirSync, unlinkSync } from "fs";
 export const dotVisualizer = <T extends Context = Context>(dag: Dag) => {
   const graph = digraph("G");
 
-  const visited = new Set<Task<T>>();
+  const visited = new Set<Task<T, {}>>();
 
-  const visit = (task: Task<T>) => {
+  const visit = (task: Task<T, {}>) => {
     if (visited.has(task)) return;
     visited.add(task);
 
