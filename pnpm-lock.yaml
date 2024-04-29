@@ -108,7 +108,7 @@ importers:
         version: 2.0.2
       ts-graphviz:
         specifier: ^2.1.1
-        version: 2.1.1
+        version: 2.1.2
     devDependencies:
       '@ts-dag/builder':
         specifier: workspace:*
@@ -723,16 +723,24 @@ packages:
     resolution: {integrity: sha512-zSGszRZAK2ATObOd7MeF3qvF91HMRxGQaQuuyTYexkDt5p9nkXbt/4CBByoF4elF+/ol2Ge1oUEs+uPtD8X9aA==}
     engines: {node: '>=18'}
 
-  '@ts-graphviz/ast@2.0.2':
-    resolution: {integrity: sha512-uj28EqpISyDTSSdMUo0Jt4K2mAQ90eqsV3vk4TA44l8ttttC9sLFqBo6Bz2ileraNohQrC3s8HgfH2cpUPQ5SA==}
+  '@ts-graphviz/adapter@2.0.3':
+    resolution: {integrity: sha512-wHSN23UdLz4vuYUBZCzq2/tfLicwStSo3cUWnzvMNxG2ngcuYauQCQInv4CI5IObq+PFol28RVrG9Ffa9BuIRA==}
+    engines: {node: '>=18'}
+
+  '@ts-graphviz/ast@2.0.3':
+    resolution: {integrity: sha512-NhOgJdOHGSn5h5ydsFreLIKFBwQ59drzZ6y0B98+KeEMqduv5hXxcQoDabw8yzeNe9B92AfR5OpUYthcdAsYgw==}
     engines: {node: '>=18'}
 
   '@ts-graphviz/common@2.1.1':
     resolution: {integrity: sha512-YGfDhLwkZk1rc9o0YoTxFEtidAZt43Yh4OBW0tRSrZxGqB9do7OqGHA/Kf5iQ7St1scTkZLEv4YRygjgFbxqmw==}
     engines: {node: '>=18'}
 
-  '@ts-graphviz/core@2.0.2':
-    resolution: {integrity: sha512-dHr9IoliSoAQuOKPAgvixp2CbEh1bvRD59D+ME5r6HOUU8KyxJCgpuk4YGtinDDKNFfwuCjzjLBJgQBGOjZWIA==}
+  '@ts-graphviz/common@2.1.2':
+    resolution: {integrity: sha512-Wyh5fOZNYyNP1mymbcHg/9atWR33NhHWIDrNa4hfbel3v340YQ+q+LMwAuIPuPt1qXINvOEhkowO5dvJWqfnPA==}
+    engines: {node: '>=18'}
+
+  '@ts-graphviz/core@2.0.3':
+    resolution: {integrity: sha512-EZ+XlSwjdLtscoBOnA/Ba6QBrmoxAR73tJFjnWxaJQsZxWBQv6bLUrDgZUdXkXRAOSkRHn0uXY6Wq/3SsV2WtQ==}
     engines: {node: '>=18'}
 
   '@types/docker-modem@3.0.6':
@@ -2165,8 +2173,8 @@ packages:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
 
-  ts-graphviz@2.1.1:
-    resolution: {integrity: sha512-iaZNFrTtGLV84Y/a2+22iuIT91eu5qVng07XwAm596+Km2zP3XcmZhZXBS6KDzQdrv0qIanV8GR3LWUzVijwZg==}
+  ts-graphviz@2.1.2:
+    resolution: {integrity: sha512-9GnOA3yiFaqZeHBEZXWa6kqc61FVhAhxQU5g3KLyGrhRr7OsDGRzs+1z35ctvD+hTTEhrBza6D41+qz+3qs7Zw==}
     engines: {node: '>=18'}
 
   ts-interface-checker@0.1.13:
@@ -2847,16 +2855,22 @@ snapshots:
     dependencies:
       '@ts-graphviz/common': 2.1.1
 
-  '@ts-graphviz/ast@2.0.2':
+  '@ts-graphviz/adapter@2.0.3':
     dependencies:
-      '@ts-graphviz/common': 2.1.1
+      '@ts-graphviz/common': 2.1.2
+
+  '@ts-graphviz/ast@2.0.3':
+    dependencies:
+      '@ts-graphviz/common': 2.1.2
 
   '@ts-graphviz/common@2.1.1': {}
 
-  '@ts-graphviz/core@2.0.2':
+  '@ts-graphviz/common@2.1.2': {}
+
+  '@ts-graphviz/core@2.0.3':
     dependencies:
-      '@ts-graphviz/ast': 2.0.2
-      '@ts-graphviz/common': 2.1.1
+      '@ts-graphviz/ast': 2.0.3
+      '@ts-graphviz/common': 2.1.2
 
   '@types/docker-modem@3.0.6':
     dependencies:
@@ -4580,12 +4594,12 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  ts-graphviz@2.1.1:
+  ts-graphviz@2.1.2:
     dependencies:
-      '@ts-graphviz/adapter': 2.0.2
-      '@ts-graphviz/ast': 2.0.2
-      '@ts-graphviz/common': 2.1.1
-      '@ts-graphviz/core': 2.0.2
+      '@ts-graphviz/adapter': 2.0.3
+      '@ts-graphviz/ast': 2.0.3
+      '@ts-graphviz/common': 2.1.2
+      '@ts-graphviz/core': 2.0.3
 
   ts-interface-checker@0.1.13: {}
 
