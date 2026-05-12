@@ -105,7 +105,7 @@ importers:
     dependencies:
       '@ts-graphviz/adapter':
         specifier: ^2.0.2
-        version: 2.0.2
+        version: 2.0.6
       ts-graphviz:
         specifier: ^2.1.1
         version: 2.1.1
@@ -719,8 +719,8 @@ packages:
   '@ts-dag/builder@0.1.0-alpha.4':
     resolution: {integrity: sha512-56Hg7BB1z3CyH7GnmC1ViKcKA8B2eoMzCfW1xdOAGwgVtELjGOACEWvWMRT5DhT4Nrw5nhNLQXd1RwrHbG0dAg==}
 
-  '@ts-graphviz/adapter@2.0.2':
-    resolution: {integrity: sha512-zSGszRZAK2ATObOd7MeF3qvF91HMRxGQaQuuyTYexkDt5p9nkXbt/4CBByoF4elF+/ol2Ge1oUEs+uPtD8X9aA==}
+  '@ts-graphviz/adapter@2.0.6':
+    resolution: {integrity: sha512-kJ10lIMSWMJkLkkCG5gt927SnGZcBuG0s0HHswGzcHTgvtUe7yk5/3zTEr0bafzsodsOq5Gi6FhQeV775nC35Q==}
     engines: {node: '>=18'}
 
   '@ts-graphviz/ast@2.0.2':
@@ -729,6 +729,10 @@ packages:
 
   '@ts-graphviz/common@2.1.1':
     resolution: {integrity: sha512-YGfDhLwkZk1rc9o0YoTxFEtidAZt43Yh4OBW0tRSrZxGqB9do7OqGHA/Kf5iQ7St1scTkZLEv4YRygjgFbxqmw==}
+    engines: {node: '>=18'}
+
+  '@ts-graphviz/common@2.1.5':
+    resolution: {integrity: sha512-S6/9+T6x8j6cr/gNhp+U2olwo1n0jKj/682QVqsh7yXWV6ednHYqxFw0ZsY3LyzT0N8jaZ6jQY9YD99le3cmvg==}
     engines: {node: '>=18'}
 
   '@ts-graphviz/core@2.0.2':
@@ -1269,10 +1273,12 @@ packages:
   glob@10.3.12:
     resolution: {integrity: sha512-TCNv8vJ+xz4QiqTpfOJA7HvYv+tNIRHKfUWw/q+v2jdgN4ebz+KY9tGx5J4rHP0o84mNP+ApH66HRX8us3Khqg==}
     engines: {node: '>=16 || 14 >=14.17'}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globalthis@1.0.3:
     resolution: {integrity: sha512-sFdI5LyBiNTHjRd7cGPWapiHWMOXKyuBNX/cWJ3NfzrZQVa8GI/8cofCl74AOVqq9W5kNmguTIzJ/1s2gyI9wA==}
@@ -1350,6 +1356,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -2006,6 +2013,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   split-ca@1.0.1:
     resolution: {integrity: sha512-Q5thBSxp5t8WPTTJQS59LrGqOZqOsrhDGDVm8azCqIBjSBd7nd9o2PM+mDulQQkh8h//4U6hFZnc/mul8t5pWQ==}
@@ -2277,6 +2285,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   vite-node@1.5.2:
@@ -2843,15 +2852,17 @@ snapshots:
       nanoid: 3.3.7
       p-retry: 4.6.2
 
-  '@ts-graphviz/adapter@2.0.2':
+  '@ts-graphviz/adapter@2.0.6':
     dependencies:
-      '@ts-graphviz/common': 2.1.1
+      '@ts-graphviz/common': 2.1.5
 
   '@ts-graphviz/ast@2.0.2':
     dependencies:
       '@ts-graphviz/common': 2.1.1
 
   '@ts-graphviz/common@2.1.1': {}
+
+  '@ts-graphviz/common@2.1.5': {}
 
   '@ts-graphviz/core@2.0.2':
     dependencies:
@@ -4582,7 +4593,7 @@ snapshots:
 
   ts-graphviz@2.1.1:
     dependencies:
-      '@ts-graphviz/adapter': 2.0.2
+      '@ts-graphviz/adapter': 2.0.6
       '@ts-graphviz/ast': 2.0.2
       '@ts-graphviz/common': 2.1.1
       '@ts-graphviz/core': 2.0.2
