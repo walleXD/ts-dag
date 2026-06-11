@@ -35,7 +35,7 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^1.5.0
-        version: 1.5.2(vitest@1.5.2(@types/node@20.12.7))
+        version: 1.5.2(vitest@1.5.2(@types/node@20.19.43))
       pino-debug:
         specifier: ^2.0.0
         version: 2.0.0(debug@4.3.4)
@@ -50,7 +50,7 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.5.0
-        version: 1.5.2(@types/node@20.12.7)
+        version: 1.5.2(@types/node@20.19.43)
 
   pkgs/db-extenders:
     devDependencies:
@@ -65,7 +65,7 @@ importers:
         version: 9.1.5
       '@types/node':
         specifier: '20'
-        version: 20.12.7
+        version: 20.19.43
       mssql:
         specifier: ^10.0.2
         version: 10.0.2
@@ -77,7 +77,7 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.5.0
-        version: 1.5.2(@types/node@20.12.7)
+        version: 1.5.2(@types/node@20.19.43)
 
   pkgs/simple-lock-state:
     dependencies:
@@ -90,7 +90,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: '20'
-        version: 20.12.7
+        version: 20.19.43
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.4.38)(typescript@5.4.5)
@@ -99,7 +99,7 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.5.0
-        version: 1.5.2(@types/node@20.12.7)
+        version: 1.5.2(@types/node@20.19.43)
 
   pkgs/visualizer:
     dependencies:
@@ -115,7 +115,7 @@ importers:
         version: link:../builder
       '@types/node':
         specifier: '20'
-        version: 20.12.7
+        version: 20.19.43
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.4.38)(typescript@5.4.5)
@@ -124,7 +124,7 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.5.0
-        version: 1.5.2(@types/node@20.12.7)
+        version: 1.5.2(@types/node@20.19.43)
 
 packages:
 
@@ -747,11 +747,11 @@ packages:
   '@types/mssql@9.1.5':
     resolution: {integrity: sha512-Q9EsgXwuRoX5wvUSu24YfbKMbFChv7pZ/jeCzPkj47ehcuXYsBcfogwrtVFosSjinD4Q/MY2YPGk9Yy1cM2Ywg==}
 
-  '@types/node@18.19.31':
-    resolution: {integrity: sha512-ArgCD39YpyyrtFKIqMDvjz79jto5fcI/SVUs2HwB+f0dAzq68yqOdyaSivLiLugSziTpNXLQrVb7RZFmdZzbhA==}
+  '@types/node@18.19.130':
+    resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
 
-  '@types/node@20.12.7':
-    resolution: {integrity: sha512-wq0cICSkRLVaf3UGLMGItu/PtdY7oaXaI/RVU+xliKVOtRna3PRY57ZDfztpDL0n11vfymMUnXv8QwYCO7L1wg==}
+  '@types/node@20.19.43':
+    resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
   '@types/readable-stream@4.0.11':
     resolution: {integrity: sha512-R3eUMUTTKoIoaz7UpYLxvZCrOmCRPRbAmoDDHKcimTEySltaJhF8hLzj4+EzyDifiX5eK6oDQGSfmNnXjxZzYQ==}
@@ -1269,10 +1269,12 @@ packages:
   glob@10.3.12:
     resolution: {integrity: sha512-TCNv8vJ+xz4QiqTpfOJA7HvYv+tNIRHKfUWw/q+v2jdgN4ebz+KY9tGx5J4rHP0o84mNP+ApH66HRX8us3Khqg==}
     engines: {node: '>=16 || 14 >=14.17'}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globalthis@1.0.3:
     resolution: {integrity: sha512-sFdI5LyBiNTHjRd7cGPWapiHWMOXKyuBNX/cWJ3NfzrZQVa8GI/8cofCl74AOVqq9W5kNmguTIzJ/1s2gyI9wA==}
@@ -1350,6 +1352,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -2006,6 +2009,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   split-ca@1.0.1:
     resolution: {integrity: sha512-Q5thBSxp5t8WPTTJQS59LrGqOZqOsrhDGDVm8azCqIBjSBd7nd9o2PM+mDulQQkh8h//4U6hFZnc/mul8t5pWQ==}
@@ -2272,11 +2276,15 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   vite-node@1.5.2:
@@ -2860,56 +2868,56 @@ snapshots:
 
   '@types/docker-modem@3.0.6':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
       '@types/ssh2': 1.15.0
 
   '@types/dockerode@3.3.28':
     dependencies:
       '@types/docker-modem': 3.0.6
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
       '@types/ssh2': 1.15.0
 
   '@types/estree@1.0.5': {}
 
   '@types/mssql@9.1.5':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
       '@types/tedious': 4.0.14
       tarn: 3.0.2
 
-  '@types/node@18.19.31':
+  '@types/node@18.19.130':
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@20.12.7':
+  '@types/node@20.19.43':
     dependencies:
-      undici-types: 5.26.5
+      undici-types: 6.21.0
 
   '@types/readable-stream@4.0.11':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
       safe-buffer: 5.1.2
 
   '@types/retry@0.12.0': {}
 
   '@types/ssh2-streams@0.1.12':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
 
   '@types/ssh2@0.5.52':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
       '@types/ssh2-streams': 0.1.12
 
   '@types/ssh2@1.15.0':
     dependencies:
-      '@types/node': 18.19.31
+      '@types/node': 18.19.130
 
   '@types/tedious@4.0.14':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
 
-  '@vitest/coverage-v8@1.5.2(vitest@1.5.2(@types/node@20.12.7))':
+  '@vitest/coverage-v8@1.5.2(vitest@1.5.2(@types/node@20.19.43))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -2924,7 +2932,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.5.2(@types/node@20.12.7)
+      vitest: 1.5.2(@types/node@20.19.43)
     transitivePeerDependencies:
       - supports-color
 
@@ -4698,17 +4706,19 @@ snapshots:
 
   undici-types@5.26.5: {}
 
+  undici-types@6.21.0: {}
+
   util-deprecate@1.0.2: {}
 
   uuid@8.3.2: {}
 
-  vite-node@1.5.2(@types/node@20.12.7):
+  vite-node@1.5.2(@types/node@20.19.43):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.10(@types/node@20.19.43)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4719,16 +4729,16 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.2.10(@types/node@20.12.7):
+  vite@5.2.10(@types/node@20.19.43):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
       rollup: 4.17.0
     optionalDependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
       fsevents: 2.3.3
 
-  vitest@1.5.2(@types/node@20.12.7):
+  vitest@1.5.2(@types/node@20.19.43):
     dependencies:
       '@vitest/expect': 1.5.2
       '@vitest/runner': 1.5.2
@@ -4747,11 +4757,11 @@ snapshots:
       strip-literal: 2.1.0
       tinybench: 2.8.0
       tinypool: 0.8.4
-      vite: 5.2.10(@types/node@20.12.7)
-      vite-node: 1.5.2(@types/node@20.12.7)
+      vite: 5.2.10(@types/node@20.19.43)
+      vite-node: 1.5.2(@types/node@20.19.43)
       why-is-node-running: 2.2.2
     optionalDependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.19.43
     transitivePeerDependencies:
       - less
       - lightningcss
